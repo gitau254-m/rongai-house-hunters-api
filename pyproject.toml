@@ -1,0 +1,17 @@
+[project]
+name = "pythonproject"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "aiosqlite>=0.22.1",
+    "asyncpg>=0.31.0",
+    "fastapi-users[sqlalchemy]>=15.0.4",
+    "imagekitio>=5.2.0",
+    "psycopg[binary,pool]>=3.3.4",
+    "pydantic-settings>=2.14.1",
+    "python-dotenv>=1.2.2",
+    "sqlalchemy>=2.0.48",
+    "uvicorn[standard]>=0.42.0",
+]

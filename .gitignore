@@ -1,0 +1,16 @@
+# Never commit these
+.env
+.env.local
+*.pyc
+.venv/
+*.db
+.idea/# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
