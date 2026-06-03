@@ -1,0 +1,101 @@
+{
+  "name": "RHH Listing Watcher",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 1
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        0
+      ],
+      "id": "f39338b4-4da4-4be6-9b6c-b8b9673d7c5b",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "url": "https://jdjfhuxwtyukggjkggab.supabase.co/rest/v1/properties?select=id,title,rent_amount,level1_area,status,created_at&status=eq.live",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpkamZodXh3dHl1a2dnamtnZ2FiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY2MDMzMDUsImV4cCI6MjA4MjE3OTMwNX0.oQktCJm9KxCO1mWSE4lbc-_qvevgAD7mm1gi2WHkorI"
+            },
+            {
+              "name": "Authorization",
+              "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpkamZodXh3dHl1a2dnamtnZ2FiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY2MDMzMDUsImV4cCI6MjA4MjE3OTMwNX0.oQktCJm9KxCO1mWSE4lbc-_qvevgAD7mm1gi2WHkorI"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "b83c4ee2-8025-43dd-b137-40e3252fcc50",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "jsCode": "// $input.all() gives us every item that came from the previous node\n// In this case, each item is one property from Supabase\nconst properties = $input.all();\n\n// properties.length = how many items came back\nconst count = properties.length;\n\n// We'll loop through each property and build a summary line\n// .map() means: \"for each item, do something and give me back a new list\"\nconst summary = properties.map(item => {\n  // item.json is the actual data — like one row from your properties table\n  const p = item.json;\n  return `• ${p.title} | Ksh ${p.rent_amount} | ${p.level1_area} | ${p.status}`;\n});\n\n// Log to console so we can see it in n8n's output panel\nconsole.log(`[RHH WATCHER] Found ${count} live listing(s):`);\nsummary.forEach(line => console.log(line));\n\n// Return structured data for the next node (if we add one later)\nreturn [{\n  json: {\n    checked_at: new Date().toISOString(),\n    live_count: count,\n    listings: summary\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        416,
+        0
+      ],
+      "id": "3ee11ab6-9e69-42b9-bcc3-e03feaa30e7e",
+      "name": "Code in JavaScript"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "1cea5447-31cb-443e-bafd-e6c2cb38f9ce",
+  "meta": {
+    "instanceId": "008f5d4243f1d55338ab7189c3568b417d6fa9cbaacff95ee2e82421d556bf75"
+  },
+  "id": "UpFSGykJnBPa04Ox",
+  "tags": []
+}
