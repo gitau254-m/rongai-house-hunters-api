@@ -1,0 +1,64 @@
+{
+  "name": "RHH Heartbeat",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 1
+            },
+            {}
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        0
+      ],
+      "id": "417c2b55-184b-4b98-bbcd-6cabe4fe6a9e",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "jsCode": "const timestamp = new Date().toISOString();\nconst message = `[RHH HEARTBEAT] Automation is alive — ${timestamp}`;\n\nconsole.log(message);\n\nreturn [{ json: { status: \"alive\", message, platform: \"RHH\", layer: 7 } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        208,
+        0
+      ],
+      "id": "395287b8-0eb2-4f79-9b3a-17519b0cc3ff",
+      "name": "Code in JavaScript"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "dfb47a52-988c-45ca-b01e-2ccc4ca80049",
+  "meta": {
+    "instanceId": "008f5d4243f1d55338ab7189c3568b417d6fa9cbaacff95ee2e82421d556bf75"
+  },
+  "id": "vcngwxpS5nXoZq2d",
+  "tags": []
+}
