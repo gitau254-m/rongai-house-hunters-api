@@ -26,6 +26,7 @@ class Property(Base):
     description = Column(Text, nullable=False)
     amenities = Column(ARRAY(String))
     house_rules = Column(Text)
+    contact_preference = Column(ARRAY(String), nullable=False)
     status = Column(String, default="draft")
     views_count = Column(Integer, default=0)
     saves_count = Column(Integer, default=0)
