@@ -5,9 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9d97dca7-5ab3-49f7-86dd-2bc36680aac4" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/fastapi/app/models/property.py" beforeDir="false" afterPath="$PROJECT_DIR$/fastapi/app/models/property.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fastapi/app/routers/houses.py" beforeDir="false" afterPath="$PROJECT_DIR$/fastapi/app/routers/houses.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fastapi/app/schemas/property.py" beforeDir="false" afterPath="$PROJECT_DIR$/fastapi/app/schemas/property.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/PythonProject.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/PythonProject.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fastapi/app/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/fastapi/app/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fastapi/pyproject.toml" beforeDir="false" afterPath="$PROJECT_DIR$/fastapi/pyproject.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fastapi/uv.lock" beforeDir="false" afterPath="$PROJECT_DIR$/fastapi/uv.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -15,7 +17,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="33" />
+    <option name="cachedIndexableFilesCount" value="2947" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">

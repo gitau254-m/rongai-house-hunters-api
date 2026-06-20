@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers import houses
+from app.routers import houses,auth
 
 app = FastAPI(
     title="Rongai House Hunters API",
@@ -26,7 +26,7 @@ app.add_middleware(
 # Register the houses router.
 # Now GET /houses/ is a real endpoint.
 app.include_router(houses.router)
-
+app.include_router(auth.router)
 @app.get("/health", tags=["System"])
 async def health_check():
     return {"status": "ok", "app": "Rongai House Hunters API"}
