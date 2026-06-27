@@ -41,7 +41,7 @@ class PropertyCreate(BaseModel):
     amenities: Optional[List[str]] = []
     house_rules: Optional[str] = None
     contact_preference: List[str]
-    caretaker_id: UUID        # later this will come from the login token
+         # later this will come from the login token
 
     # ── Validation — Pydantic checks these BEFORE touching the database ──
     @field_validator("rent_amount")

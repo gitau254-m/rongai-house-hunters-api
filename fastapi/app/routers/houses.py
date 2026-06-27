@@ -5,6 +5,7 @@ from typing import List, Optional
 from uuid import UUID
 
 from app.core.database import get_db
+from app.core.debs import require_role
 from app.models.property import Property
 from app.schemas.property import PropertyResponse, PropertyCreate  # ← add PropertyCreate
 
@@ -53,6 +54,7 @@ async def get_single_house(house_id: UUID, db: AsyncSession = Depends(get_db)):
 @router.post("/", response_model=PropertyResponse, status_code=201)
 async def create_house(
     house_data: PropertyCreate,    # ← FastAPI reads the JSON body into this object
+    current_user: dict = Depends(require_role(["caretaker"])),
     db: AsyncSession = Depends(get_db)
 ):
     """
@@ -63,7 +65,7 @@ async def create_house(
 
     # Convert the Pydantic schema into a SQLAlchemy model object
     new_house = Property(
-        caretaker_id=house_data.caretaker_id,
+        caretaker_id=current_user["user_id"],
         title=house_data.title,
         property_type=house_data.property_type,
         rent_amount=house_data.rent_amount,
