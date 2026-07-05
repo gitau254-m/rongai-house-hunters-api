@@ -7,8 +7,7 @@ from app.core.config import settings
 # When you deploy to production, set echo=False.
 engine = create_async_engine(
     settings.database_url,
-    echo=True,
-    
+    echo=settings.debug,   # True locally, False in production automatically
 )
 
 # A "session" is one database conversation.

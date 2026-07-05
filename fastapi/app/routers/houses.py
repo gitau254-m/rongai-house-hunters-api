@@ -38,6 +38,33 @@ async def get_all_houses(
     result = await db.execute(query)
     return result.scalars().all()
 
+@router.get("/my/listings", response_model=List[PropertyResponse])
+async def get_my_listings(
+    # Optional filter by status — for the tabs: All | Live | Pending | Rejected
+    status: Optional[str] = None,
+    current_user: dict = Depends(require_role(["caretaker"])),
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    Caretaker sees their own listings.
+    Powers the dashboard cards:
+    Total Listings | Live Now | Pending | Views (7d)
+    """
+    # Base query — only this caretaker's listings
+    query = select(Property).where(
+        Property.caretaker_id == current_user["user_id"]
+    )
+
+    # Optional status filter (frontend uses this for tabs)
+    if status:
+        query = query.where(Property.status == status)
+
+    # Most recent first
+    query = query.order_by(Property.created_at.desc())
+
+    result = await db.execute(query)
+    return result.scalars().all()
+
 
 @router.get("/{house_id}", response_model=PropertyResponse)
 async def get_single_house(house_id: UUID, db: AsyncSession = Depends(get_db)):
