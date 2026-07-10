@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers import houses,auth, caretakers, appointments, admin
+from app.routers import houses,auth, caretakers, appointments, admin, favourites, notifications,  reviews, reports
 from starlette.middleware.sessions import SessionMiddleware
 from app.core.config import settings   # ← ADD THIS LINE
 app = FastAPI(
@@ -31,6 +31,10 @@ app.include_router(auth.router)
 app.include_router(caretakers.router)
 app.include_router(appointments.router)
 app.include_router(admin.router)
+app.include_router(favourites.router)
+app.include_router(notifications.router)
+app.include_router(reviews.router)
+app.include_router(reports.router)
 @app.get("/health", tags=["System"])
 async def health_check():
     return {"status": "ok", "app": "Rongai House Hunters API"}
