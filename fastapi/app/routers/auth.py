@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, BackgroundTasks
 from fastapi.responses import RedirectResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
@@ -11,7 +11,7 @@ from app.core.security import hash_password, verify_password, create_access_toke
 from app.core.config import settings
 from app.models.profile import Profile
 from app.schemas.auth import SignupRequest, LoginRequest, TokenResponse
-
+from app.core.email import send_signup_welcome_email
 router = APIRouter(
     prefix="/auth",
     tags=["Authentication"],
@@ -34,7 +34,7 @@ oauth.register(
 # ════════════════════════════════════════════════
 
 @router.post("/signup", status_code=201)
-async def signup(data: SignupRequest, db: AsyncSession = Depends(get_db)):
+async def signup(data: SignupRequest, background_tasks: BackgroundTasks,db: AsyncSession = Depends(get_db)):
     """
     Creates a new user account with email and password.
     Password is hashed before saving — never stored as plain text.
@@ -61,6 +61,13 @@ async def signup(data: SignupRequest, db: AsyncSession = Depends(get_db)):
     db.add(new_user)
     await db.commit()
     await db.refresh(new_user)
+
+    background_tasks.add_task(
+        send_signup_welcome_email,
+        to_email=data.email,
+        full_name=data.full_name,
+        role=data.role,
+    )
 
     return {
         "message": "Account created successfully",

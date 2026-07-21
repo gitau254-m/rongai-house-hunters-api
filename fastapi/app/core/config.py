@@ -13,6 +13,10 @@ class Settings(BaseSettings):
     google_client_secret: str = ""
     google_redirect_uri: str = "http://localhost:8000/auth/google/callback"
 
+    redis_url: str = "redis://localhost:6379"
+    # Email — new addition
+    resend_api_key: str = "re_geNaMdgz_GKPQvBVYZbo5GGkKpcoShwj8"
+    from_email: str = "onboarding@resend.dev"
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",

@@ -1,6 +1,6 @@
 import random
 import string
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException,  BackgroundTasks
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from pydantic import BaseModel, field_validator
@@ -12,7 +12,7 @@ from app.core.database import get_db
 from app.core.debs import require_role, get_current_user
 from app.models.appointment import Appointment
 from app.models.property import Property
-
+from app.core.email import send_appointment_confirmation_email
 router = APIRouter(
     prefix="/appointments",
     tags=["Appointments"],
@@ -62,6 +62,7 @@ class AppointmentResponse(BaseModel):
 @router.post("/", response_model=AppointmentResponse, status_code=201)
 async def book_appointment(
     data: AppointmentCreate,
+    background_tasks: BackgroundTasks,
     # Only logged-in customers can book — caretakers cannot book their own listings
     current_user: dict = Depends(require_role(["customer"])),
     db: AsyncSession = Depends(get_db)
@@ -115,6 +116,16 @@ async def book_appointment(
 
     await db.commit()
     await db.refresh(new_appointment)
+
+    background_tasks.add_task(
+        send_appointment_confirmation_email,
+        to_email=current_user.get("email", ""),  # needs email in token — see note below
+        customer_name=current_user.get("name", "Valued Customer"),
+        property_title=house.title,
+        appointment_date=str(data.preferred_date),
+        appointment_time=data.preferred_time,
+        appointment_id=str(new_appointment.id),
+    )
     return new_appointment
 
 
@@ -188,6 +199,15 @@ async def confirm_appointment(
 
     appointment.status = "confirmed"
     appointment.caretaker_confirmed_at = datetime.now(timezone.utc)
+    # Notify the customer live — their bell badge updates instantly
+    await create_notification(
+        db=db,
+        user_id=str(appointment.customer_id),
+        type="appointment_confirmed",
+        title="Your viewing is confirmed! 🏠",
+        message=f"Your viewing appointment has been confirmed. Check your appointments for details.",
+        link=f"/dashboard/customer/appointments/{appointment_id}"
+    )
 
     await db.commit()
     return {"message": "Appointment confirmed", "appointment_id": str(appointment_id)}

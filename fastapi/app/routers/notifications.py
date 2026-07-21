@@ -9,6 +9,7 @@ from datetime import datetime
 from app.core.database import get_db
 from app.core.debs import get_current_user
 from app.models.notification import Notification
+from app.core.websocket_manager import manager
 
 router = APIRouter(
     prefix="/notifications",
@@ -149,3 +150,11 @@ async def create_notification(
     db.add(notification)
     # Note: no commit here — the calling function handles the commit
     # This keeps everything in one database transaction
+
+    await manager.send_to_user(user_id, {
+        "type": "new_notification",
+        "title": title,
+        "message": message,
+        "link": link,
+        "notification_type": type,
+    })

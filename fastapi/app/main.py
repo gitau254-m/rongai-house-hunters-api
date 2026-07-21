@@ -1,5 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi import WebSocket, WebSocketDisconnect
+from app.core.websocket_manager import manager
+from app.core.security import decode_access_token
+from jose import JWTError
 from app.routers import houses,auth, caretakers, appointments, admin, favourites, notifications,  reviews, reports
 from starlette.middleware.sessions import SessionMiddleware
 from app.core.config import settings   # ← ADD THIS LINE
